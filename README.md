@@ -41,6 +41,11 @@ service mariadb start
 mysql_secure_installation
  ```
 
+*Selecionaremos las siguientes opciones para configurar la region y la zona geografica*
+
+1. `Pulsaremos 8 para seleccionar la zona geográfica "Europe"`
+2. `Pulsaremos 29 para seleccionar la región "Madrid"`
+
 ---
 ![MariaDB](IMG/MariaDB.png)
 

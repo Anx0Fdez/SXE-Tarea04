@@ -77,19 +77,21 @@ Descargar Wordpress y descomprimirlo en una carpeta llamada `wordpress`
 ``` bash
 wget https://wordpress.org/latest.tar.gz
 ```
-*POSIBLE ERROR*
+---
+### ***[ POSIBLE ERROR ]***
 ``` bash
 wget https://wordpress.org/latest.tar.gz
 sh: 29: wget: not found
 ```
 Para solucionar este error, instalar `wget`
+
 `apt install wget`
 
 ``` bash
 tar -xvf latest.tar.gz
 mv wordpress /var/www/html/
 ```
-
+---
 ### **Apartado 3**
 
 Comprobar que puedes acceder a wordpress desde el navegador

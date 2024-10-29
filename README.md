@@ -151,9 +151,14 @@ nano /srv/www/wordpress/wp-config.php
 
 ![cap1](IMG/cap1.png)
 ![cap2](IMG/cap2.png)
+*para generara el codigo anterior accede a la siguiente pagina web* 
+
+https://api.wordpress.org/secret-key/1.1/salt/
+
+---
 
 ## Final mente verificamos en el navegador que podemos aceder a wordpress
-`http://192.168.0.25:8000/wp-admin/setup-config.php`
+`http://172.20.10.14:8000/wp-admin/setup-config.php`
 
 
 

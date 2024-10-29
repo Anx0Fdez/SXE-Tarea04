@@ -34,12 +34,15 @@
 ---
 **Configuración de MariaDB**
 
-*Primero, se nos pedirá la contraseña de root, que dejaremos en blanco. Después, nos solicitará cambiarla; la cambiamos y seleccionamos "Y" en cada opción para completar la configuración restante.*
+*Primero, se nos pedirá la contraseña de root, que dejaremos en blanco. Después, nos solicitará cambiarla; En el siguiente ponemos NO y depues seleccionamos "Y" en cada opción para completar la configuración restante.*
 
 ``` bash
 service mariadb start
 mysql_secure_installation
  ```
+
+Ahora instalamos PHP
+ `apt install -y php php-mysql libapache2-mod-php `
 
 *Selecionaremos las siguientes opciones para configurar la region y la zona geografica*
 
@@ -48,6 +51,15 @@ mysql_secure_installation
 
 ---
 ![MariaDB](IMG/MariaDB.png)
+
+*Probamos que todo este funcionando correctamente y reiniciamos el servicio de apache*
+```
+echo "<?php phpinfo(); ?>" | tee /var/www/html/info.php
+service apache2 restart
+```
+*Acedemos al navegador para verificar*
+`http://(ip de la maquina)/info.php`
+![PHP](IMG/PHP.png)
 
 ---
 ### **Apartado 2**
@@ -68,35 +80,80 @@ apt install ghostscript \
             php-zip
 ```
 
-Crear carpeta para Wordpress
+Crear carpeta para Wordpress e instalamos wordpress
 ``` bash
 mkdir /var/www/html/wordpress
+chown www-data: /srv/www
+curl https://wordpress.org/latest.tar.gz | tar zx -C /srv/www
 ```
-
-Descargar Wordpress y descomprimirlo en una carpeta llamada `wordpress`
-``` bash
-wget https://wordpress.org/latest.tar.gz
-```
----
-### ***[ POSIBLE ERROR ]***
-``` bash
-wget https://wordpress.org/latest.tar.gz
-sh: 29: wget: not found
-```
-Para solucionar este error, instalar `wget`
-
-`apt install wget`
+#### Configuramos apache en WordPress
 
 ``` bash
-tar -xvf latest.tar.gz
-mv wordpress /var/www/html/
+apt update
+apt install nano
 ```
+*Editamos ael archivo de configuración*
+``` bash
+touch /etc/apache2/sites-available/wordpress.conf
+nano /etc/apache2/sites-available/wordpress.conf
+```
+*Pegamos dentro:*
+``` bash
+<VirtualHost *:80>
+     ServerAdmin webmaster@localhost
+     DocumentRoot /srv/www/wordpress
+     ServerName wordpress.local
+     ServerAlias www.wordpress.local
+     <Directory /srv/www/wordpress>
+         Options FollowSymLinks
+         AllowOverride All
+         Require all granted
+     </Directory>
+     ErrorLog ${APACHE_LOG_DIR}/error.log
+     CustomLog ${APACHE_LOG_DIR}/access.log combined
+ </VirtualHost>
+```
+*Ahora iniciamos wordpress y reiniciamos apache*
+
+```bash
+a2ensite wordpress
+service apache2 reload
+```
+
+*Aplicamos la siguiente configuración*
+```bash
+a2enmod rewrite
+a2dissite 000-default
+```
+
+*Reiniciamos apache*
+```bash
+service apache2 restart
+```
+
 ---
 ### **Apartado 3**
 
-Comprobar que puedes acceder a wordpress desde el navegador
+#### Ahora configuraremos la Database
+```bash
+mysql -u root
+CREATE DATABASE wordpress;
+CREATE USER 'pedro' IDENTIFIED BY '<your-password>';
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, ALTER ON wordpress.* TO 'pedro';
+FLUSH PRIVILEGES;
+QUIT;
+```
 
-`http://dirección_IP_del_contenedor`
+```bash
+cp /srv/www/wordpress/wp-config-sample.php /srv/www/wordpress/wp-config.php
+nano /srv/www/wordpress/wp-config.php
+```
+
+![cap1](IMG/cap1.png)
+![cap2](IMG/cap2.png)
+
+## Final mente verificamos en el navegador que podemos aceder a wordpress
+`http://192.168.0.25:8000/wp-admin/setup-config.php`
 
 
 

@@ -157,7 +157,7 @@ https://api.wordpress.org/secret-key/1.1/salt/
 
 ---
 
-## Final mente verificamos en el navegador que podemos aceder a wordpress
+## Finalmente verificamos en el navegador que podemos aceder a wordpress
 `http://172.20.10.14:8000/wp-admin/setup-config.php`
 
 
